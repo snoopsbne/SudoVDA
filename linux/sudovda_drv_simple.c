@@ -1,5 +1,5 @@
 /*
- * SudoVDA Linux Kernel Driver
+ * SudoVDA Linux Kernel Driver - Simplified Test Version
  * Virtual Display Driver for SteamOS/Arch Linux
  */
 
@@ -9,18 +9,7 @@
 #include <linux/pci.h>
 #include <linux/drm/drm.h>
 #include <linux/drm/drm_drv.h>
-#include <linux/drm/drm_connector.h>
-#include <linux/drm/drm_encoder.h>
-#include <linux/drm/drm_crtc.h>
-#include <linux/drm/drm_plane.h>
-#include <linux/drm/drm_fb_helper.h>
-#include <linux/drm/drm_gem.h>
-#include <linux/drm/drm_ioctl.h>
 #include <linux/slab.h>
-#include <linux/mutex.h>
-#include <linux/list.h>
-
-#include "include/sudovda.h"
 
 #define DRIVER_NAME "sudovda"
 #define DRIVER_DESC "SudoVDA Virtual Display Driver"
@@ -30,23 +19,6 @@ MODULE_AUTHOR("SudoMaker");
 MODULE_DESCRIPTION(DRIVER_DESC);
 MODULE_LICENSE("GPL");
 MODULE_VERSION("1.0.0");
-
-static int sudovda_driver_open(struct drm_device *dev, struct drm_file *file);
-static void sudovda_driver_postclose(struct drm_device *dev, struct drm_file *file);
-static long sudovda_driver_ioctl(struct drm_device *dev, void *data,
-				 struct drm_file *file);
-
-static const struct drm_driver sudovda_driver = {
-	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
-	.open = sudovda_driver_open,
-	.postclose = sudovda_driver_postclose,
-	.name = DRIVER_NAME,
-	.desc = DRIVER_DESC,
-	.date = DRIVER_DATE,
-	.major = SUDOVDA_DRIVER_MAJOR,
-	.minor = SUDOVDA_DRIVER_MINOR,
-	.patchlevel = SUDOVDA_DRIVER_PATCHLEVEL,
-};
 
 static int sudovda_driver_open(struct drm_device *dev, struct drm_file *file)
 {
@@ -59,12 +31,18 @@ static void sudovda_driver_postclose(struct drm_device *dev, struct drm_file *fi
 	pr_info("SudoVDA: Device closed\n");
 }
 
-static long sudovda_driver_ioctl(struct drm_device *dev, void *data,
-				 struct drm_file *file)
-{
-	pr_info("SudoVDA: IOCTL called\n");
-	return -ENOTTY;
-}
+static const struct drm_driver sudovda_driver = {
+	.driver_features = DRIVER_MODESET | DRIVER_GEM,
+	.open = sudovda_driver_open,
+	.postclose = sudovda_driver_postclose,
+	.fops = &drm_fops,
+	.name = DRIVER_NAME,
+	.desc = DRIVER_DESC,
+	.date = DRIVER_DATE,
+	.major = 1,
+	.minor = 0,
+	.patchlevel = 0,
+};
 
 static int sudovda_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 {

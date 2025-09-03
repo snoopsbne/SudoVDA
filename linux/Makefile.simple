@@ -1,0 +1,26 @@
+# SudoVDA Linux Kernel Driver Makefile - Simple Test Version
+# Virtual Display Driver for SteamOS/Arch Linux
+
+obj-m += sudovda_simple.o
+
+# Source files
+sudovda_simple-y := sudovda_drv_simple.o
+
+# Kernel build directory
+KERNELDIR ?= /lib/modules/$(shell uname -r)/build
+
+# Build directory
+PWD := $(shell pwd)
+
+# Build flags
+ccflags-y += -I$(src)/include
+
+# Default target
+all:
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
+
+# Clean target
+clean:
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) clean
+
+.PHONY: all clean

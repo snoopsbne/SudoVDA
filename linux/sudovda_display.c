@@ -266,8 +266,7 @@ int sudovda_display_create(struct drm_device *dev, struct sudovda_display **disp
 	}
 
 	/* Create CRTC */
-	ret = drm_crtc_init_with_planes(dev, &display->crtc, &display->primary_plane,
-					NULL, &sudovda_crtc_funcs, NULL);
+	ret = drm_crtc_init(dev, &display->crtc, &sudovda_crtc_funcs);
 	if (ret) {
 		pr_err("SudoVDA: Failed to initialize CRTC: %d\n", ret);
 		goto err_encoder;
@@ -276,10 +275,10 @@ int sudovda_display_create(struct drm_device *dev, struct sudovda_display **disp
 	drm_crtc_helper_add(&display->crtc, &sudovda_crtc_helper_funcs);
 
 	/* Create primary plane */
-	ret = drm_universal_plane_init(dev, &display->primary_plane, 0,
-				       &sudovda_plane_funcs,
-				       NULL, 0, NULL,
-				       DRM_PLANE_TYPE_PRIMARY, NULL);
+	ret = drm_plane_init(dev, &display->primary_plane, 0,
+			     &sudovda_plane_funcs,
+			     NULL, 0, NULL,
+			     DRM_PLANE_TYPE_PRIMARY, NULL);
 	if (ret) {
 		pr_err("SudoVDA: Failed to initialize primary plane: %d\n", ret);
 		goto err_crtc;
