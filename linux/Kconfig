@@ -1,0 +1,38 @@
+config SUDOVDA
+	tristate "SudoVDA Virtual Display Driver"
+	depends on DRM
+	depends on PCI
+	help
+	  SudoVDA is a virtual display driver for Linux that creates virtual
+	  displays that can be used with streaming applications like Sunshine.
+	  
+	  This driver provides:
+	  - Multiple virtual displays with configurable resolutions
+	  - High refresh rate support (up to 240Hz)
+	  - HDR support
+	  - EDID generation and management
+	  - User-space ioctl interface for display management
+	  
+	  Say Y or M here to enable SudoVDA support.
+
+config SUDOVDA_DEBUG
+	bool "SudoVDA Debug Support"
+	depends on SUDOVDA
+	help
+	  Enable debug output and additional debugging features for SudoVDA.
+	  
+	  This will add extra logging and debugging information to help
+	  troubleshoot issues with the virtual display driver.
+	  
+	  Say Y here if you need to debug SudoVDA issues.
+
+config SUDOVDA_MAX_DISPLAYS
+	int "Maximum number of virtual displays"
+	depends on SUDOVDA
+	default 10
+	range 1 32
+	help
+	  Maximum number of virtual displays that can be created simultaneously.
+	  
+	  Higher values will use more system memory but allow more virtual
+	  displays to be active at once.
